@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: nginx-web
+  annotations:
+    # 指定 Ingress Controller 的类型
+    kubernetes.io/ingress.class: "nginx"
+    # 指定我们的 rules 的 path 可以使用正则表达式
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    # 连接超时时间，默认为 5s
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    # 后端服务器回转数据超时时间，默认为 60s
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    # 后端服务器响应超时时间，默认为 60s
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    # 客户端上传文件，最大大小，默认为 20m
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    # URL 重写
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  # 路由规则
+  rules:
+  # 主机名，只能是域名，修改为你自己的
+  - host: k8s.test.com
+    http:
+      paths:
+      - path:
+        backend:
+          # 后台部署的 Service Name，与上面部署的 Tomcat 对应
+          serviceName: tomcat-http
+          # 后台部署的 Service Port，与上面部署的 Tomcat 对应
+          servicePort: 8080
+
