@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-jib
+  template:
+    metadata:
+      labels:
+        app: spring-boot-jib
+    spec:
+      nodeSelector:
+        platform: beta
+      containers:
+        - name: spring-boot-jib-pod
+          image: ctc-micro-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
